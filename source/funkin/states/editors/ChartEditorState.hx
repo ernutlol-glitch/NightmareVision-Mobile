@@ -2807,28 +2807,6 @@ class ChartEditorState extends MusicBeatState
 			}
 		}
 		lastConductorPos = Conductor.songPosition;
-
-        //people gonna hate me when gonna see this but i dont have another what exactly want me to fix this
-        #if mobile
-        for (input in blockPressWhileTypingOn) {
-        if (input != null && (input is FlxUIInputText)) {
-            var textInput = cast(input, FlxUIInputText);
-            
-            if (textInput.hasFocus) {
-                FlxG.stage.window.textInputEnabled = true;
-                
-            
-                if (FlxG.touches.justReleased().length > 0) {
-                    var touch = FlxG.touches.justReleased()[0];
-                    if (!touch.overlaps(textInput)) {
-                        textInput.hasFocus = false;
-                        FlxG.stage.window.textInputEnabled = false;
-                    }
-                }
-            }
-        }
-    }
-    #end
 		
 		super.update(elapsed);
 	}
