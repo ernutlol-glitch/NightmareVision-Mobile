@@ -2809,7 +2809,7 @@ class ChartEditorState extends MusicBeatState
 		lastConductorPos = Conductor.songPosition;
 
         //people gonna hate me when gonna see this but i dont have another what exactly want me to fix this
-        #if android
+        #if mobile
         for (input in blockPressWhileTypingOn) {
         if (input != null && (input is FlxUIInputText)) {
             var textInput = cast(input, FlxUIInputText);
