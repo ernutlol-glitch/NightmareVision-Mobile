@@ -634,8 +634,8 @@ class ChartEditorState extends MusicBeatState
 	function addSongUI():Void
 	{
 		UI_songTitle = new FlxUIInputTextEx(10, 10, 70, _song.song, 8);
-    UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
-		blockPressWhileTypingOn.push(UI_songTitle);
+		blockPressWhileTypingOn.push(UI_songTitle);   
+      UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
@@ -948,8 +948,9 @@ class ChartEditorState extends MusicBeatState
 		var gradTxt = new FlxText(10, 10, 0, "Gradient Colors", 12);
 		
 		var gradient1colors = new FlxUIInputTextEx(10, 30, 150, '${ClientPrefs.editorGradColors[0].red}, ${ClientPrefs.editorGradColors[0].green}, ${ClientPrefs.editorGradColors[0].blue}', 8);
-     gradient1colors.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		var gradient2colors = new FlxUIInputTextEx(10, 50, 150, '${ClientPrefs.editorGradColors[1].red}, ${ClientPrefs.editorGradColors[1].green}, ${ClientPrefs.editorGradColors[1].blue}', 8);
+
+         gradient1colors.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
         gradient2colors.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var changecolors:FlxButton = new FlxButton(180, 37.5, "Change colors", function() {
@@ -1006,9 +1007,10 @@ class ChartEditorState extends MusicBeatState
 		var boxTxt = new FlxText(10, 95, 0, "Grid Colors", 12);
 		
 		var boxTxtColors1 = new FlxUIInputTextEx(10, 115, 150, '${ClientPrefs.editorBoxColors[0].red}, ${ClientPrefs.editorBoxColors[0].green}, ${ClientPrefs.editorBoxColors[0].blue}', 8);
-      boxTxtColors1.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		var boxTxtColors2 = new FlxUIInputTextEx(10, 135, 150, '${ClientPrefs.editorBoxColors[1].red}, ${ClientPrefs.editorBoxColors[1].green}, ${ClientPrefs.editorBoxColors[1].blue}', 8);
+
        boxTxtColors2.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+       boxTxtColors1.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var changecolors:FlxButton = new FlxButton(180, 125, "Change colors", function() {
 			box1Colors = [];
@@ -1435,9 +1437,9 @@ class ChartEditorState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(stepperSusLength);
 		
 		strumTimeInputText = new FlxUIInputTextEx(10, 65, 180, "0");
-    strumTimeInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		tab_group_note.add(strumTimeInputText);
 		blockPressWhileTypingOn.push(strumTimeInputText);
+      strumTimeInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var key:Int = 0;
 		var displayNameList:Array<String> = [];
@@ -1616,14 +1618,14 @@ class ChartEditorState extends MusicBeatState
 		var text:FlxText = new FlxText(20, 90, 0, "Value 1:");
 		tab_group_event.add(text);
 		value1InputText = new FlxUIInputTextEx(20, 110, 100, "");
-    value1InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		blockPressWhileTypingOn.push(value1InputText);
+      value1InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var text:FlxText = new FlxText(20, 130, 0, "Value 2:");
 		tab_group_event.add(text);
 		value2InputText = new FlxUIInputTextEx(20, 150, 100, "");
-    value2InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		blockPressWhileTypingOn.push(value2InputText);
+      value2InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		// New event buttons
 		var removeButton:FlxButton = new FlxButton(eventDropDown.x + eventDropDown.width + 10, eventDropDown.y, '-', function() {
