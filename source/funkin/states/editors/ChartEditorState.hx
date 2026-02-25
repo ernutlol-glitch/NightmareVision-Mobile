@@ -829,7 +829,6 @@ class ChartEditorState extends MusicBeatState
 			{
 				for (file in FunkinAssets.readDirectory(directory))
 				{
-					// too lazy to make a func that checks if theres a file ending. go my shitty workaround!!!!!
 					if (!file.contains('.'))
 					{
 						tempMap.set(file, true);
