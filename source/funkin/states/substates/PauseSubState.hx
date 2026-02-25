@@ -260,6 +260,7 @@ class PauseSubState extends MusicBeatSubstate
 					close();
                 case "Chart Editor":
                     FlxG.switchState(ChartEditorState.new);
+                    PlayState.chartingMode = true;
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
