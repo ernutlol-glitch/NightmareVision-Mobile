@@ -53,7 +53,7 @@ class FlxUIInputTextEx extends FlxUIInputText
 		if (FlxG.mouse.justPressed)
 		{
 			var hadFocus:Bool = hasFocus;
-			if (FlxG.mouse.overlaps(this, getDefaultCamera()))
+			if (FlxG.mouse.overlaps(this))
 			{
 				caretIndex = getCaretIndex();
 				hasFocus = FlxG.stage.window.textInputEnabled = true;
