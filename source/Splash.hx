@@ -46,7 +46,7 @@ class Splash extends FlxState
 			logo.updateHitbox();
 			logo.screenCenter();
 			
-			if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER)
+			if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed)
 			{
 				finish();
 			}
