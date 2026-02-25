@@ -2605,7 +2605,7 @@ class ChartEditorState extends MusicBeatState
 			if (FlxG.keys.pressed.SHIFT  #if android || touchPad.buttonC.pressed #end) shiftThing = 4;
 			
 			if (FlxG.keys.justPressed.D #if android || touchPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
-			if (FlxG.keys.justPressed.A #if android || touchPad.buttonleft.justPressed #end)
+			if (FlxG.keys.justPressed.A #if android || touchPad.buttonLeft.justPressed #end)
 			{
 				if (curSec <= 0)
 				{
