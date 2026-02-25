@@ -29,7 +29,7 @@ class PauseSubState extends MusicBeatSubstate
 	public static var instance:PauseSubState;
 	
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Chart Editor', 'Options', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 	
@@ -257,6 +257,8 @@ class PauseSubState extends MusicBeatSubstate
 					OptionsState.onPlayState = true;
 				case "Resume":
 					close();
+      case "Chart Editor":
+        FlxG.switchState(ChartEditorState.new);
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
