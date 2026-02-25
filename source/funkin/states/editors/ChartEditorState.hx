@@ -2326,7 +2326,7 @@ class ChartEditorState extends MusicBeatState
 		
 		if (!blockInput)
 		{
-			if (FlxG.keys.justPressed.ENTER  #if android || touchPad.buttonA.pressed #end)
+			if (FlxG.keys.justPressed.ENTER  #if android || touchPad.buttonA.justPressed #end)
 			{
 				enterSong();
 			}
@@ -2343,7 +2343,7 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 			
-			if (FlxG.keys.justPressed.BACKSPACE)
+			if (FlxG.keys.justPressed.BACKSPACE #if android || touchPad.buttonB.justPressed #end)
 			{
 				PlayState.chartingMode = false;
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
@@ -2352,17 +2352,17 @@ class ChartEditorState extends MusicBeatState
 				return;
 			}
 			
-			if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL)
+			if (FlxG.keys.justPressed.Z #if android || touchPad.buttonV.justPressed #end && FlxG.keys.pressed.CONTROL)
 			{
 				undo();
 			}
 			
-			if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL)
+			if (FlxG.keys.justPressed.Z #if android || touchPad.buttonV.justPressed #end && curZoom > 0 && !FlxG.keys.pressed.CONTROL)
 			{
 				--curZoom;
 				updateZoom();
 			}
-			if (FlxG.keys.justPressed.X && curZoom < zoomList.length - 1)
+			if (FlxG.keys.justPressed.X #if android || touchPad.buttonD.justPressed #end && curZoom < zoomList.length - 1)
 			{
 				curZoom++;
 				updateZoom();
@@ -2395,14 +2395,14 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 			
-			if (FlxG.keys.justPressed.SPACE)
+			if (FlxG.keys.justPressed.SPACE #if android || touchPad.buttonY.justPressed #end)
 			{
 				togglePause();
 			}
 			
 			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
 			{
-				if (FlxG.keys.pressed.SHIFT) resetSection(true);
+				if (FlxG.keys.pressed.SHIFT #if android || touchPad.buttonC.justPressed #end) resetSection(true);
 				else resetSection();
 			}
 			
@@ -2440,7 +2440,7 @@ class ChartEditorState extends MusicBeatState
 			
 			// ARROW VORTEX SHIT NO DEADASS
 			
-			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S)
+			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S #if android || touchPad.buttonUp.pressed || touchPad.buttonDown.pressed #end)
 			{
 				resetLittleFriends();
 				FlxG.sound.music.pause();
@@ -2452,7 +2452,7 @@ class ChartEditorState extends MusicBeatState
 				var daTime:Float = 700 * FlxG.elapsed * holdingShift;
 				resetLittleFriends();
 				
-				if (FlxG.keys.pressed.W)
+				if (FlxG.keys.pressed.W #if android || touchPad.buttonUp.pressed #end)
 				{
 					FlxG.sound.music.time -= daTime;
 				}
@@ -2494,7 +2494,7 @@ class ChartEditorState extends MusicBeatState
 			
 			var style = currentType;
 			
-			if (FlxG.keys.pressed.SHIFT)
+			if (FlxG.keys.pressed.SHIFT #if android || touchPad.buttonC.pressed #end)
 			{
 				style = 3;
 			}
@@ -2505,7 +2505,7 @@ class ChartEditorState extends MusicBeatState
 			
 			if (!blockInput)
 			{
-				if (FlxG.keys.justPressed.RIGHT)
+				if (FlxG.keys.justPressed.RIGHT #if android || touchPad.buttonRight.justPressed #end)
 				{
 					curQuant++;
 					if (curQuant > quantizations.length - 1) curQuant = 0;
@@ -2513,7 +2513,7 @@ class ChartEditorState extends MusicBeatState
 					quantization = quantizations[curQuant];
 				}
 				
-				if (FlxG.keys.justPressed.LEFT)
+				if (FlxG.keys.justPressed.LEFT #if android || touchPad.buttonLeft.justPressed #end)
 				{
 					curQuant--;
 					if (curQuant < 0) curQuant = quantizations.length - 1;
@@ -2541,7 +2541,7 @@ class ChartEditorState extends MusicBeatState
 				}
 				
 				var feces:Float;
-				if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN)
+				if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN #if android || touchPad.buttonUp.justPressed || touchPad.buttonDown.justPressed #end)
 				{
 					FlxG.sound.music.pause();
 					
@@ -2553,7 +2553,7 @@ class ChartEditorState extends MusicBeatState
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
-					if (FlxG.keys.pressed.UP)
+					if (FlxG.keys.pressed.UP #if android || touchPad.buttonUp.pressed #end)
 					{
 						var fuck:Float = MathUtil.quantize(beat, snap) - increase;
 						feces = Conductor.beatToSeconds(fuck);
@@ -2602,10 +2602,10 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 			var shiftThing:Int = 1;
-			if (FlxG.keys.pressed.SHIFT) shiftThing = 4;
+			if (FlxG.keys.pressed.SHIFT  #if android || touchPad.buttonC.pressed #end) shiftThing = 4;
 			
-			if (FlxG.keys.justPressed.D) changeSection(curSec + shiftThing);
-			if (FlxG.keys.justPressed.A)
+			if (FlxG.keys.justPressed.D #if android || touchPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
+			if (FlxG.keys.justPressed.A #if android || touchPad.buttonleft.justPressed #end)
 			{
 				if (curSec <= 0)
 				{
