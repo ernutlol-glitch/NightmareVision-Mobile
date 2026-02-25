@@ -2505,7 +2505,7 @@ class ChartEditorState extends MusicBeatState
 			
 			if (!blockInput)
 			{
-				if (FlxG.keys.justPressed.RIGHT #if android || touchPad.buttonRight.justPressed #end)
+				if (FlxG.keys.justPressed.RIGHT)
 				{
 					curQuant++;
 					if (curQuant > quantizations.length - 1) curQuant = 0;
@@ -2513,7 +2513,7 @@ class ChartEditorState extends MusicBeatState
 					quantization = quantizations[curQuant];
 				}
 				
-				if (FlxG.keys.justPressed.LEFT #if android || touchPad.buttonLeft.justPressed #end)
+				if (FlxG.keys.justPressed.LEFT)
 				{
 					curQuant--;
 					if (curQuant < 0) curQuant = quantizations.length - 1;
@@ -2604,8 +2604,8 @@ class ChartEditorState extends MusicBeatState
 			var shiftThing:Int = 1;
 			if (FlxG.keys.pressed.SHIFT  #if android || touchPad.buttonC.pressed #end) shiftThing = 4;
 			
-			if (FlxG.keys.justPressed.D) changeSection(curSec + shiftThing);
-			if (FlxG.keys.justPressed.A)
+			if (FlxG.keys.justPressed.D #if android || touchPad.buttonRight.justPressed && touchPad.buttonC.pressed #end) changeSection(curSec + shiftThing);
+			if (FlxG.keys.justPressed.A #if android || touchPad.buttonLeft.justPressed && touchPad.buttonC.pressed #end)
 			{
 				if (curSec <= 0)
 				{
