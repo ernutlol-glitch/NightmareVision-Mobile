@@ -16,7 +16,7 @@ import flixel.util.FlxStringUtil;
 import funkin.backend.Difficulty;
 import funkin.utils.CameraUtil;
 import funkin.states.options.OptionsState;
-import funkin.states.editors.ChartEditor;
+import funkin.states.editors.ChartEditorState;
 import funkin.backend.MusicBeatSubstate;
 import funkin.data.*;
 import funkin.states.*;
@@ -258,8 +258,8 @@ class PauseSubState extends MusicBeatSubstate
 					OptionsState.onPlayState = true;
 				case "Resume":
 					close();
-      case "Chart Editor":
-        FlxG.switchState(ChartEditorState.new);
+                case "Chart Editor":
+                    FlxG.switchState(ChartEditorState.new);
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
