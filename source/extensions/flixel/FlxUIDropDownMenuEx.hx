@@ -107,27 +107,30 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
             }
 
             #if android
-            var started = FlxG.touches.justStarted();
-            if (started.length > 0 && !started[0].overlaps(this))
+            var releasedTouches =           FlxG.touches.justReleased();
+            if (releasedTouches.length > 0)
             {
-                showList(false);
-            }
-            #else
-            if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this))
+            if (!releasedTouches[0].overlaps(this) && !releasedTouches[0].overlaps(header))
             {
-                showList(false);
+             showList(false);
             }
-            #end
+           }
+         #end
         }
     }
 	
-	override function showList(b:Bool)
-	{
-		super.showList(b);
-		if (currentScroll != 0)
-		{
-			currentScroll = 0;
-			updateButtonPositions();
-		}
-	}
+	private function showList(b:Bool):Void
+ {
+    for (button in list)
+    {
+        button.visible = b;
+        button.active = b;
+    }
+
+    dropPanel.visible = b;
+    if(currentScroll != 0) {
+        currentScroll = 0;
+        updateButtonPositions();
+    }
+    FlxUI.forceFocus(b, this); 
 }
