@@ -45,47 +45,38 @@ class FlxUIInputTextEx extends FlxUIInputText
 	
 	override public function update(elapsed:Float):Void
 {
-	super.update(elapsed);
+    // idk why
+    // super.update(elapsed); 
 
-	var hadFocus:Bool = hasFocus;
-	var checkTouch:Bool = false;
+    #if android
+    var touches = FlxG.touches.justStarted(); 
+    if (touches.length > 0)
+    {
+        if (touches[0].overlaps(this, getDefaultCamera())) 
+        {
+            if (!hasFocus) {
+                caretIndex = getCaretIndex();
+                hasFocus = true;
+                FlxG.stage.window.textInputEnabled = true;
+                if (focusGained != null) focusGained();
+            }
+        } else {
+            if (hasFocus) {
+                hasFocus = false;
+                FlxG.stage.window.textInputEnabled = false;
+                if (focusLost != null) focusLost();
+            }
+        }
+    }
+    #end
 
-	#if FLX_MOUSE
-	if (FlxG.mouse.justPressed) checkTouch = true;
-	#end
-
-	#if android
-	var touches = FlxG.touches.justStarted(); 
-	if (touches.length > 0) checkTouch = true;
-	#end
-
-	if (checkTouch)
-	{
-		var isOver:Bool = false;
-
-		#if android
-		var touches = FlxG.touches.justStarted();
-		if (touches.length > 0 && touches[0].overlaps(this, getDefaultCamera())) 
-			isOver = true;
-		#end
-
-		#if FLX_MOUSE
-		if (FlxG.mouse.overlaps(this, getDefaultCamera())) 
-			isOver = true;
-		#end
-
-		if (isOver)
-		{
-			if (!hadFocus)
-			{
-				caretIndex = getCaretIndex();
-				hasFocus = true;
-				FlxG.stage.window.textInputEnabled = true;
-				if (focusGained != null) focusGained();
-			}
-		}
-		// The else was removed because it caused the mobile keyboard to close for 1 second
-	}
+    if (hasFocus) {
+        _caretTimer += elapsed;
+        if (_caretTimer >= 0.5) {
+            _caretTimer = 0;
+            caretVisible = !caretVisible;
+        }
+    }
 }
 
 	override function onKeyDown(e:KeyboardEvent):Void
