@@ -43,30 +43,33 @@ class FlxUIInputTextEx extends FlxUIInputText
 		}
 	}
 	
-	override public function update(elapsed:Float):Void
-	{
-		super.update(elapsed);
-		
-		#if FLX_MOUSE
-		// Set focus and caretIndex as a response to mouse press
-		
-		if (FlxG.mouse.overlaps(this, getDefaultCamera()))
-		{
-			var hadFocus:Bool = hasFocus;
-			if (FlxG.mouse.overlaps(this))
-			{
-				caretIndex = getCaretIndex();
-				hasFocus = FlxG.stage.window.textInputEnabled = true;
-				if (!hadFocus && focusGained != null) focusGained();
-			}
-			else
-			{
-				hasFocus = false;
-				if (hadFocus && focusLost != null) focusLost();
-			}
-		}
-		#end
-	}
+	override public function update(elapsed:Float):Void{
+	 super.update(elapsed);
+
+	 var hadFocus:Bool = hasFocus;
+
+	 #if FLX_MOUSE
+	  var isOver:Bool = FlxG.mouse.overlaps(this, getDefaultCamera());
+	 #else
+	  var isOver:Bool = FlxG.touches.list.length > 0 && FlxG.touches.list[0].overlaps(this);
+	 #end
+
+	 if (isOver)
+	 {
+		caretIndex = getCaretIndex();
+		hasFocus = true;
+		FlxG.stage.window.textInputEnabled = true;
+
+		if (!hadFocus && focusGained != null)
+			focusGained();
+	    }
+	   else
+	   {
+		  hasFocus = false;
+		  if (hadFocus && focusLost != null)
+			  focusLost();
+	     }
+   }
 	
 	override function onKeyDown(e:KeyboardEvent):Void
 	{
