@@ -1109,9 +1109,9 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 
         if (touch.pressed)
         {
-            FlxG.camera.scroll.x -= touch.deltaX;
-            FlxG.camera.scroll.y -= touch.deltaY;
-        }
+         FlxG.camera.scroll.x -= (touch.x - touch.previousX);
+         FlxG.camera.scroll.y -= (touch.y - touch.previousY);
+       }
     }
 
     #end
