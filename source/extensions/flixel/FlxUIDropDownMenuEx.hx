@@ -108,3 +108,4 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
         FlxUI.forceFocus(b, this);
         #end
     }
+}
