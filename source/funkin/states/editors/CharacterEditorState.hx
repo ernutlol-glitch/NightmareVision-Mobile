@@ -1058,6 +1058,12 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			character.playAnim(character.getAnimName(), true);
 		}
 	}
+
+    #if android
+    var lastTouchX:Float = 0;
+    var lastTouchY:Float = 0;
+    var wasTouching:Bool = false;
+    #end
 	
 	function controlCamera(elapsed:Float)
    {
@@ -1100,21 +1106,30 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
     #end
 
     #if android
+var touches = FlxG.touches.list;
 
-    var touches = FlxG.touches.list;
+if (!ToolKitUtils.isHaxeUIHovered(camHUD) && touches.length == 1)
+{
+    var touch = touches[0];
 
-    if (!ToolKitUtils.isHaxeUIHovered(camHUD) && touches.length == 1)
+    if (touch.pressed)
     {
-        var touch = touches[0];
-
-        if (touch.pressed)
+        if (wasTouching)
         {
-         FlxG.camera.scroll.x -= (touch.x - touch.previousX);
-         FlxG.camera.scroll.y -= (touch.y - touch.previousY);
-       }
-    }
+            FlxG.camera.scroll.x -= (touch.x - lastTouchX);
+            FlxG.camera.scroll.y -= (touch.y - lastTouchY);
+        }
 
-    #end
+        lastTouchX = touch.x;
+        lastTouchY = touch.y;
+        wasTouching = true;
+    }
+    else
+    {
+        wasTouching = false;
+    }
+}
+#end
 
     FlxG.camera.zoom = FlxMath.bound(FlxG.camera.zoom, 0.1, 6);
 }
