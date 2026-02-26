@@ -65,11 +65,12 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
                 if (FlxG.touches.list.length > 0) {
                     var touch = FlxG.touches.list[0];
                     
-                    var diffY = touch.screenY - touch.startScreenY;
-
-                    if (touch.pressed && Math.abs(diffY) > 10) {
-                        if (diffY > 0) dragUp = true; 
-                        if (diffY < 0) dragDown = true; 
+                    if (touch.pressed && touch.justMoved) {
+                        
+                        var distance = touch.screenY - touch.lastVisualPos.y; // Intentemos con lastVisualPos
+                        
+                        if (touch.screenY > touch.lastVisualPos.y + 5) dragUp = true;
+                        if (touch.screenY < touch.lastVisualPos.y - 5) dragDown = true;
                     }
                 }
                 #end
