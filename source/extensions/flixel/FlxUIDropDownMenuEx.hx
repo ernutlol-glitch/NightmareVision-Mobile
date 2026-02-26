@@ -52,51 +52,56 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
 		}
 	}
 	
-	override function checkClickOff()
-	{
-		if (dropPanel.visible)
-		{
-			if (list.length > 1 && canScroll)
-			{
-				var dragUp:Bool = false;
-				var dragDown:Bool = false;
+	    override function checkClickOff()
+    {
+        if (dropPanel.visible)
+        {
+            if (list.length > 1 && canScroll)
+            {
+                var dragUp:Bool = false;
+                var dragDown:Bool = false;
 
-				#if android
-				if (FlxG.touches.list.length > 0) {
-					var touch = FlxG.touches.list[0];
-					if (touch.pressed && Math.abs(touch.deltaY) > 2) {
-						if (touch.deltaY > 0) dragUp = true;
-						if (touch.deltaY < 0) dragDown = true; 
-					}
-				}
-				#end
+                #if android
+                if (FlxG.touches.list.length > 0) {
+                    var touch = FlxG.touches.list[0];
+                    
+                    var diffY = touch.screenY - touch.startScreenY;
 
-				if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP || dragUp)
-				{
-					if (currentScroll < 0) currentScroll = 0;
-					updateButtonPositions();
-				}
-				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN || dragDown)
-				{
-					currentScroll++;
-					if (currentScroll >= list.length) currentScroll = list.length - 1;
-					updateButtonPositions();
-				}
-			}
-			
-			#if android
-			if (FlxG.touches.justStarted.length > 0 && !FlxG.touches.justStarted[0].overlaps(this, getDefaultCamera()))
-			{
-				showList(false);
-			}
-			#else
-			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this, getDefaultCamera()))
-			{
-				showList(false);
-			}
-			#end
-		}
-	}
+                    if (touch.pressed && Math.abs(diffY) > 10) {
+                        if (diffY > 0) dragUp = true; 
+                        if (diffY < 0) dragDown = true; 
+                    }
+                }
+                #end
+
+                if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP || dragUp)
+                {
+                    --currentScroll;
+                    if (currentScroll < 0) currentScroll = 0;
+                    updateButtonPositions();
+                }
+                else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN || dragDown)
+                {
+                    currentScroll++;
+                    if (currentScroll >= list.length) currentScroll = list.length - 1;
+                    updateButtonPositions();
+                }
+            }
+            
+            #if android
+            var startedTouches = FlxG.touches.justStarted();
+            if (startedTouches.length > 0 && !startedTouches[0].overlaps(this, getDefaultCamera()))
+            {
+                showList(false);
+            }
+            #else
+            if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this, getDefaultCamera()))
+            {
+                showList(false);
+            }
+            #end
+        }
+    }
 	
 	override function showList(b:Bool)
 	{
