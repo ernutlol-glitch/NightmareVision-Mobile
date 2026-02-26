@@ -52,64 +52,74 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
 		}
 	}
 
-  var lastY:Float = 0;
-	
-	 override function checkClickOff()
-  {
-    if (dropPanel.visible)
+  private var _lastTouchY:Float = -1;
+
+    public override function update(elapsed:Float):Void
     {
-        if (list.length > 1 && canScroll)
+        super.update(elapsed);
+
+        if (dropPanel.visible && list.length > 1 && canScroll)
         {
             var dragUp:Bool = false;
             var dragDown:Bool = false;
 
+            #if FLX_MOUSE
+            if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP) dragUp = true;
+            if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN) dragDown = true;
+            #end
+
             #if android
-            if (FlxG.touches.list.length > 0) 
+            var touch = FlxG.touches.list[0];
+            if (touch != null && touch.pressed)
             {
-                var touch = FlxG.touches.list[0];
-                
-                if (touch.pressed) 
+                if (_lastTouchY != -1)
                 {
-                    if (touch.screenY > lastY + 5) dragUp = true;
-                    if (touch.screenY < lastY - 5) dragDown = true;
-                    
-                    lastY = touch.screenY; 
+                    var delta = touch.screenY - _lastTouchY;
+                    if (delta > 30) {
+                        dragUp = true;
+                        _lastTouchY = touch.screenY;
+                    }
+                    else if (delta < -30) {
+                        dragDown = true;
+                        _lastTouchY = touch.screenY;
+                    }
                 }
-                
-                if (touch.justReleased) {
-                    lastY = 0;
+                else {
+                    _lastTouchY = touch.screenY;
                 }
+            }
+            else {
+                _lastTouchY = -1;
             }
             #end
 
-            if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP || dragUp)
+            if (dragUp)
             {
                 --currentScroll;
                 if (currentScroll < 0) currentScroll = 0;
                 updateButtonPositions();
             }
-            else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN || dragDown)
+            else if (dragDown)
             {
                 currentScroll++;
                 if (currentScroll >= list.length) currentScroll = list.length - 1;
                 updateButtonPositions();
             }
+
+            #if android
+            var started = FlxG.touches.justStarted();
+            if (started.length > 0 && !started[0].overlaps(this))
+            {
+                showList(false);
+            }
+            #else
+            if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this))
+            {
+                showList(false);
+            }
+            #end
         }
-        
-        #if android
-        var touchList = FlxG.touches.justStarted();
-        if (touchList.length > 0 && !touchList[0].overlaps(this, getDefaultCamera()))
-        {
-            showList(false);
-        }
-        #else
-        if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this, getDefaultCamera()))
-        {
-            showList(false);
-        }
-        #end
     }
-}
 	
 	override function showList(b:Bool)
 	{
