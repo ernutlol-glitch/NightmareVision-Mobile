@@ -43,9 +43,10 @@ class FlxUIInputTextEx extends FlxUIInputText
 		}
 	}
 	
-	override public function update(elapsed:Float):Void
+	var _myCaretTimer:Float = 0; 
+
+override public function update(elapsed:Float):Void
 {
-    // idk why
     // super.update(elapsed); 
 
     #if android
@@ -71,9 +72,9 @@ class FlxUIInputTextEx extends FlxUIInputText
     #end
 
     if (hasFocus) {
-        _caretTimer += elapsed;
-        if (_caretTimer >= 0.5) {
-            _caretTimer = 0;
+        _myCaretTimer += elapsed;
+        if (_myCaretTimer >= 0.5) {
+            _myCaretTimer = 0;
             caretVisible = !caretVisible;
         }
     }
