@@ -44,32 +44,54 @@ class FlxUIInputTextEx extends FlxUIInputText
 	}
 	
 	override public function update(elapsed:Float):Void{
-	 super.update(elapsed);
+	super.update(elapsed);
 
-	 var hadFocus:Bool = hasFocus;
+	var hadFocus:Bool = hasFocus;
+	var checkTouch:Bool = false;
 
-	 #if FLX_MOUSE
-	  var isOver:Bool = FlxG.mouse.overlaps(this, getDefaultCamera());
-	 #else
-	  var isOver:Bool = FlxG.touches.list.length > 0 && FlxG.touches.list[0].overlaps(this);
-	 #end
+	#if FLX_MOUSE
+	if (FlxG.mouse.justPressed) checkTouch = true;
+	#end
 
-	 if (isOver)
-	 {
-		caretIndex = getCaretIndex();
-		hasFocus = true;
-		FlxG.stage.window.textInputEnabled = true;
+	#if android
+	if (FlxG.touches.justStarted.length > 0) checkTouch = true;
+	#end
 
-		if (!hadFocus && focusGained != null)
-			focusGained();
-	    }
-	   else
-	   {
-		  hasFocus = false;
-		  if (hadFocus && focusLost != null)
-			  focusLost();
-	     }
-   }
+	if (checkTouch)
+	{
+	  var isOver:Bool = false;
+		
+		#if android
+		if (FlxG.touches.justStarted.length > 0 && FlxG.touches.justStarted[0].overlaps(this, getDefaultCamera())) 
+			isOver = true;
+		#end
+		
+		#if FLX_MOUSE
+		if (FlxG.mouse.overlaps(this, getDefaultCamera())) 
+			isOver = true;
+		#end
+
+		if (isOver)
+		{
+			if (!hadFocus)
+			{
+				caretIndex = getCaretIndex();
+				hasFocus = true;
+				FlxG.stage.window.textInputEnabled = true;
+				if (focusGained != null) focusGained();
+			}
+		}
+		else
+		{
+			if (hadFocus)
+			{
+				hasFocus = false;
+				FlxG.stage.window.textInputEnabled = false;
+				if (focusLost != null) focusLost();
+			}
+		}
+	}
+}
 	
 	override function onKeyDown(e:KeyboardEvent):Void
 	{
