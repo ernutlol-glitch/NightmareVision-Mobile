@@ -43,12 +43,8 @@ class FlxUIInputTextEx extends FlxUIInputText
 		}
 	}
 	
-	var _myCaretTimer:Float = 0; 
-
-override public function update(elapsed:Float):Void
+	override public function update(elapsed:Float):Void
 {
-    // super.update(elapsed); 
-
     #if android
     var touches = FlxG.touches.justStarted(); 
     if (touches.length > 0)
@@ -70,15 +66,18 @@ override public function update(elapsed:Float):Void
         }
     }
     #end
-
+    
+    /*
     if (hasFocus) {
         _myCaretTimer += elapsed;
         if (_myCaretTimer >= 0.5) {
             _myCaretTimer = 0;
-            caretVisible = !caretVisible;
+            @:privateAccess _caretVisible = !_caretVisible;
         }
     }
+    */
 }
+
 
 	override function onKeyDown(e:KeyboardEvent):Void
 	{
