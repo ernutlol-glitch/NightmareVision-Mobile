@@ -80,7 +80,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		}
 
 		#if android
-		var option:Option = new Option('Storage Type', 'Which folder Psych Engine should use?\n(CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)', 'storageType', 'string',
+		var option:Option = new Option('Storage Type', 'Which folder NightmareVision Engine should use?\n(CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)', 'storageType', 'string',
 			'EXTERNAL_DATA', storageTypes);
 		addOption(option);
 		#end
