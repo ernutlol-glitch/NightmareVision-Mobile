@@ -62,13 +62,13 @@ class FlxUIInputTextEx extends FlxUIInputText
 	if (checkTouch)
 	{
 		var isOver:Bool = false;
-		
+
 		#if android
 		var touches = FlxG.touches.justStarted();
 		if (touches.length > 0 && touches[0].overlaps(this, getDefaultCamera())) 
 			isOver = true;
 		#end
-		
+
 		#if FLX_MOUSE
 		if (FlxG.mouse.overlaps(this, getDefaultCamera())) 
 			isOver = true;
@@ -84,19 +84,10 @@ class FlxUIInputTextEx extends FlxUIInputText
 				if (focusGained != null) focusGained();
 			}
 		}
-		else
-		{
-			if (hadFocus)
-			{
-				hasFocus = false;
-				FlxG.stage.window.textInputEnabled = false;
-				if (focusLost != null) focusLost();
-			}
-		}
+		// The else was removed because it caused the mobile keyboard to close for 1 second
 	}
 }
 
-	
 	override function onKeyDown(e:KeyboardEvent):Void
 	{
 		final key:FlxKey = e.keyCode;
