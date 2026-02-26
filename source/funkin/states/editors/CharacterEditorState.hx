@@ -1059,11 +1059,10 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		}
 	}
 
-    #if android
-    var lastTouchX:Float = 0;
-    var lastTouchY:Float = 0;
-    var wasTouching:Bool = false;
-    #end
+   #if android
+   var lastTouchX:Float = 0;
+   var lastTouchY:Float = 0;
+  #end
 	
 	function controlCamera(elapsed:Float)
    {
@@ -1114,19 +1113,27 @@ if (!ToolKitUtils.isHaxeUIHovered(camHUD) && touches.length == 1)
 
     if (touch.pressed)
     {
-        if (wasTouching)
+        var dx = touch.x - lastTouchX;
+        var dy = touch.y - lastTouchY;
+
+        if (!isCameraDragging && (Math.abs(dx) > 8 || Math.abs(dy) > 8))
         {
-            FlxG.camera.scroll.x -= (touch.x - lastTouchX);
-            FlxG.camera.scroll.y -= (touch.y - lastTouchY);
+            isCameraDragging = true;
+        }
+
+        if (isCameraDragging)
+        {
+            var mult:Float = 0.5; 
+            FlxG.camera.scroll.x -= dx * mult;
+            FlxG.camera.scroll.y -= dy * mult;
         }
 
         lastTouchX = touch.x;
         lastTouchY = touch.y;
-        wasTouching = true;
     }
     else
     {
-        wasTouching = false;
+        isCameraDragging = false;
     }
 }
 #end
