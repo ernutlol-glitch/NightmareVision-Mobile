@@ -1100,26 +1100,31 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
     #end
    //This part was not done by me.
     #if android
-     if (FlxG.mouse.justPressed)
-		{
-			isCameraDragging = false;
-		}
+     if (!ToolKitUtils.isHaxeUIHovered(camHUD))
+{
+    if (FlxG.mouse.justPressed)
+    {
+        isCameraDragging = false;
+    }
 
-		if (FlxG.mouse.pressed && isCameraDragging)
-		{
-			var mult = FlxG.keys.pressed.SHIFT ? 2 : 1;
-			FlxG.camera.scroll.x -= FlxG.mouse.deltaX * mult * 0.5;
-			FlxG.camera.scroll.y -= FlxG.mouse.deltaY * mult * 0.5;
-		}
-		else if (FlxG.mouse.justMoved && !isCameraDragging && (Math.abs(FlxG.mouse.deltaX) > 10 || Math.abs(FlxG.mouse.deltaY) > 10))
-		{
-			isCameraDragging = true;
-		}
+    if (FlxG.mouse.pressed && isCameraDragging)
+    {
+        var mult = FlxG.keys.pressed.SHIFT ? 2 : 1;
+        // Aumentamos la velocidad multiplicando por 1.5 (o lo que quieras)
+        FlxG.camera.scroll.x -= FlxG.mouse.deltaX * mult * 0.5 * 1.5;
+        FlxG.camera.scroll.y -= FlxG.mouse.deltaY * mult * 0.5 * 1.5;
+    }
+    else if (FlxG.mouse.justMoved && !isCameraDragging && 
+             (Math.abs(FlxG.mouse.deltaX) > 10 || Math.abs(FlxG.mouse.deltaY) > 10))
+    {
+        isCameraDragging = true;
+    }
 
-		if (FlxG.mouse.justReleased)
-		{
-			isCameraDragging = false;
-		}
+    if (FlxG.mouse.justReleased)
+    {
+        isCameraDragging = false;
+    }
+}
 
 #end
 
