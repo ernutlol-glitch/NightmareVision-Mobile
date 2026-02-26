@@ -58,26 +58,43 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
 		{
 			if (list.length > 1 && canScroll)
 			{
-				if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP)
+				var dragUp:Bool = false;
+				var dragDown:Bool = false;
+
+				#if android
+				if (FlxG.touches.list.length > 0) {
+					var touch = FlxG.touches.list[0];
+					if (touch.pressed && Math.abs(touch.deltaY) > 2) {
+						if (touch.deltaY > 0) dragUp = true;
+						if (touch.deltaY < 0) dragDown = true; 
+					}
+				}
+				#end
+
+				if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP || dragUp)
 				{
-					// Go up
-					--currentScroll;
 					if (currentScroll < 0) currentScroll = 0;
 					updateButtonPositions();
 				}
-				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN)
+				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN || dragDown)
 				{
-					// Go down
 					currentScroll++;
 					if (currentScroll >= list.length) currentScroll = list.length - 1;
 					updateButtonPositions();
 				}
 			}
 			
+			#if android
+			if (FlxG.touches.justStarted.length > 0 && !FlxG.touches.justStarted[0].overlaps(this, getDefaultCamera()))
+			{
+				showList(false);
+			}
+			#else
 			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this, getDefaultCamera()))
 			{
 				showList(false);
 			}
+			#end
 		}
 	}
 	
