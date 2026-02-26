@@ -2406,7 +2406,7 @@ class ChartEditorState extends MusicBeatState
 				else resetSection();
 			}
 			
-			if (FlxG.mouse.wheel != 0)
+			if (FlxG.mouse.wheel != 0 && !FlxG.mouse.overlaps(UI_box)) 
 			{
 				resetLittleFriends();
 				FlxG.sound.music.pause();
