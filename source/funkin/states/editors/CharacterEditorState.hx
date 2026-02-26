@@ -188,6 +188,9 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		pointerBounds = new DebugBounds(cameraPointer);
 		add(pointerBounds);
 		pointerBounds.alpha = 0;
+
+     addTouchPad("LEFT_FULL", "CHARACTER_EDITOR");
+		addTouchPadCamera();
 	}
 	
 	function exitState()
@@ -878,7 +881,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			FlxG.sound.volumeUpKeys = [];
 		}
 		
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE #if android || touchPad.buttonB.pressed #end)
 		{
 			exitState();
 		}
@@ -965,24 +968,30 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		
 		if (isTextFieldFocused) return false;
 		
-		final moveDistance = FlxG.keys.pressed.SHIFT ? 10 : 1;
+		final moveDistance = 
+      (#if android 
+       (touchPad.buttonC.pressed) 
+      #else 
+       (FlxG.keys.pressed.SHIFT) 
+      #end)
+       ? 10 : 1;
 		
-		if (FlxG.keys.justPressed.LEFT)
+		if (FlxG.keys.justPressed.LEFT #if android || touchPad.buttonLeft.justPressed #end)
 		{
 			character.offset.x += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.DOWN)
+		else if (FlxG.keys.justPressed.DOWN #if android || touchPad.buttonDown.justPressed #end)
 		{
 			character.offset.y -= moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.UP)
+		else if (FlxG.keys.justPressed.UP #if android || touchPad.buttonUp.justPressed #end)
 		{
 			character.offset.y += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.RIGHT)
+		else if (FlxG.keys.justPressed.RIGHT #if android || touchPad.buttonRight.justPressed #end)
 		{
 			character.offset.x -= moveDistance;
 			return true;
@@ -1015,23 +1024,23 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			uiElements.animationList.animationList.selectItemBy((item) -> return item.id == anim);
 		}
 		
-		if (FlxG.keys.justPressed.A)
+		if (FlxG.keys.justPressed.A #if android || touchPad.buttonG.pressed #end)
 		{
 			playSing('singLEFT');
 		}
-		else if (FlxG.keys.justPressed.W)
+		else if (FlxG.keys.justPressed.W #if android || touchPad.buttonY.pressed #end)
 		{
 			playSing('singUP');
 		}
-		else if (FlxG.keys.justPressed.S)
+		else if (FlxG.keys.justPressed.S #if android || touchPad.buttonX.pressed #end)
 		{
 			playSing('singDOWN');
 		}
-		else if (FlxG.keys.justPressed.D)
+		else if (FlxG.keys.justPressed.D #if android || touchPad.buttonZ.pressed #end)
 		{
 			playSing('singRIGHT');
 		}
-		else if (FlxG.keys.justPressed.SPACE)
+		else if (FlxG.keys.justPressed.SPACE #if android || touchPad.buttonA.pressed #end)
 		{
 			dance();
 		}
@@ -1051,40 +1060,64 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 	}
 	
 	function controlCamera(elapsed:Float)
-	{
-		if (FlxG.keys.pressed.E && FlxG.camera.zoom < 3)
-		{
-			FlxG.camera.zoom += elapsed * FlxG.camera.zoom;
-		}
-		if (FlxG.keys.pressed.Q && FlxG.camera.zoom > 0.1)
-		{
-			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom;
-		}
-		
-		if (FlxG.mouse.justReleasedMiddle) isCameraDragging = false;
-		
-		if (ToolKitUtils.isHaxeUIHovered(camHUD) && !isCameraDragging) return;
-		
-		if (FlxG.mouse.justPressedMiddle)
-		{
-			isCameraDragging = true;
-			FlxG.sound.play(Paths.sound('ui/mouseMiddleClick'));
-		}
-		
-		if (FlxG.mouse.pressedMiddle && FlxG.mouse.justMoved)
-		{
-			var mult = FlxG.keys.pressed.SHIFT ? 2 : 1;
-			FlxG.camera.scroll.x -= FlxG.mouse.deltaViewX * mult;
-			FlxG.camera.scroll.y -= FlxG.mouse.deltaViewY * mult;
-		}
-		
-		if (FlxG.mouse.wheel != 0)
-		{
-			FlxG.camera.zoom += FlxG.mouse.wheel * (0.1 * FlxG.camera.zoom);
-		}
-		
-		FlxG.camera.zoom = FlxMath.bound(FlxG.camera.zoom, 0.1, 6);
-	}
+   {
+    if ((FlxG.keys.pressed.E #if android || touchPad.buttonV.pressed #end)  && FlxG.camera.zoom < 3)
+     {
+       FlxG.camera.zoom += elapsed * FlxG.camera.zoom;
+      }
+
+    if ((FlxG.keys.pressed.Q #if android || touchPad.buttonD.pressed #end) && FlxG.camera.zoom > 0.1)
+     {
+       FlxG.camera.zoom -= elapsed * FlxG.camera.zoom;
+      }
+
+    #if !android
+
+    if (FlxG.mouse.justPressed)
+        isCameraDragging = false;
+
+    if (ToolKitUtils.isHaxeUIHovered(camHUD) && !isCameraDragging)
+        return;
+
+    if (FlxG.mouse.justPressedMiddle)
+    {
+        isCameraDragging = true;
+        FlxG.sound.play(Paths.sound('ui/mouseMiddleClick'));
+    }
+
+    if (FlxG.mouse.pressedMiddle && FlxG.mouse.justMoved)
+    {
+        var mult = FlxG.keys.pressed.SHIFT ? 2 : 1;
+        FlxG.camera.scroll.x -= FlxG.mouse.deltaViewX * mult;
+        FlxG.camera.scroll.y -= FlxG.mouse.deltaViewY * mult;
+    }
+
+    if (FlxG.mouse.wheel != 0)
+    {
+        FlxG.camera.zoom += FlxG.mouse.wheel * (0.1 * FlxG.camera.zoom);
+    }
+
+    #end
+
+    #if android
+
+    var touches = FlxG.touches.list;
+
+    if (!ToolKitUtils.isHaxeUIHovered(camHUD) && touches.length == 1)
+    {
+        var touch = touches[0];
+
+        if (touch.pressed && touch.justMoved)
+        {
+            FlxG.camera.scroll.x -= touch.deltaScreenX;
+            FlxG.camera.scroll.y -= touch.deltaScreenY;
+        }
+    }
+
+    #end
+
+    FlxG.camera.zoom = FlxMath.bound(FlxG.camera.zoom, 0.1, 6);
+}
 	
 	function refreshCharDropDown() // rewrite this
 	{
@@ -1448,7 +1481,11 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 				FlxG.sound.play(Paths.sound('ui/warn'));
 			};
 			
-			fileRef.save(dataToSave, '$characterId.json');
+        #if android
+        StorageUtil.saveContent('$characterId.json', dataToSave.trim());
+        #else
+        fileRef.save(dataToSave, '$characterId.json');
+        #end
 		}
 	}
 	
