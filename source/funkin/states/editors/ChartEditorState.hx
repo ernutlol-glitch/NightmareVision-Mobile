@@ -581,7 +581,7 @@ class ChartEditorState extends MusicBeatState
 		
 		updateGrid();
 		
-    addTouchPad("LEFT_FULL", "A_B_C_D_V_X_Y_Z");
+		addTouchPad("LEFT_FULL", "A_B_C_D_V_X_Y_Z");
 		addTouchPadCamera();
 		super.create();
 	}
@@ -634,8 +634,7 @@ class ChartEditorState extends MusicBeatState
 	function addSongUI():Void
 	{
 		UI_songTitle = new FlxUIInputTextEx(10, 10, 70, _song.song, 8);
-		blockPressWhileTypingOn.push(UI_songTitle);   
-      UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		blockPressWhileTypingOn.push(UI_songTitle);
 		
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
@@ -861,11 +860,9 @@ class ChartEditorState extends MusicBeatState
 		if (skin == null) skin = '';
 		noteSkinInputText = new FlxUIInputTextEx(player2DropDown.x, player2DropDown.y + 50, 150, skin, 8);
 		blockPressWhileTypingOn.push(noteSkinInputText);
-     noteSkinInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		noteSplashesInputText = new FlxUIInputTextEx(noteSkinInputText.x, noteSkinInputText.y + 35, 150, _song.splashSkin, 8);
 		blockPressWhileTypingOn.push(noteSplashesInputText);
-      noteSplashesInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var reloadNotesButton:FlxButton = new FlxButton(noteSplashesInputText.x + 5, noteSplashesInputText.y, 'Change Notes', function() {
 			_song.arrowSkin = noteSkinInputText.text;
@@ -949,9 +946,6 @@ class ChartEditorState extends MusicBeatState
 		
 		var gradient1colors = new FlxUIInputTextEx(10, 30, 150, '${ClientPrefs.editorGradColors[0].red}, ${ClientPrefs.editorGradColors[0].green}, ${ClientPrefs.editorGradColors[0].blue}', 8);
 		var gradient2colors = new FlxUIInputTextEx(10, 50, 150, '${ClientPrefs.editorGradColors[1].red}, ${ClientPrefs.editorGradColors[1].green}, ${ClientPrefs.editorGradColors[1].blue}', 8);
-
-         gradient1colors.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
-        gradient2colors.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var changecolors:FlxButton = new FlxButton(180, 37.5, "Change colors", function() {
 			grad1Colors = [];
@@ -1008,9 +1002,6 @@ class ChartEditorState extends MusicBeatState
 		
 		var boxTxtColors1 = new FlxUIInputTextEx(10, 115, 150, '${ClientPrefs.editorBoxColors[0].red}, ${ClientPrefs.editorBoxColors[0].green}, ${ClientPrefs.editorBoxColors[0].blue}', 8);
 		var boxTxtColors2 = new FlxUIInputTextEx(10, 135, 150, '${ClientPrefs.editorBoxColors[1].red}, ${ClientPrefs.editorBoxColors[1].green}, ${ClientPrefs.editorBoxColors[1].blue}', 8);
-
-       boxTxtColors2.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
-       boxTxtColors1.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var changecolors:FlxButton = new FlxButton(180, 125, "Change colors", function() {
 			box1Colors = [];
@@ -1044,7 +1035,6 @@ class ChartEditorState extends MusicBeatState
 		var uiTxt = new FlxText(10, 155, 0, "UI Colors", 12);
 		
 		var uiBoxTxt = new FlxUIInputTextEx(10, 175, 150, '${ClientPrefs.editorUIColor.red}, ${ClientPrefs.editorUIColor.green}, ${ClientPrefs.editorUIColor.blue}', 8);
-       uiBoxTxt.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var changecolors:FlxButton = new FlxButton(180, 170, "Change Color", function() {
 			var shit = uiBoxTxt.text.split(', ');
@@ -1061,7 +1051,6 @@ class ChartEditorState extends MusicBeatState
 		
 		var prsNm = new FlxText(10, 230, 0, "New Preset Name", 6);
 		var newPrsName = new FlxUIInputTextEx(10, 240, 150, '', 8);
-      newPrsName.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var lPrs = new FlxText(10, 260, 0, "Load Preset", 6);
 		var prsList = new FlxUIDropDownMenuEx(10, 270, FlxUIDropDownMenu.makeStrIdLabelArray(ClientPrefs.chartPresetList), function(preset:String) {
@@ -1439,7 +1428,6 @@ class ChartEditorState extends MusicBeatState
 		strumTimeInputText = new FlxUIInputTextEx(10, 65, 180, "0");
 		tab_group_note.add(strumTimeInputText);
 		blockPressWhileTypingOn.push(strumTimeInputText);
-      strumTimeInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var key:Int = 0;
 		var displayNameList:Array<String> = [];
@@ -1619,13 +1607,11 @@ class ChartEditorState extends MusicBeatState
 		tab_group_event.add(text);
 		value1InputText = new FlxUIInputTextEx(20, 110, 100, "");
 		blockPressWhileTypingOn.push(value1InputText);
-      value1InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		var text:FlxText = new FlxText(20, 130, 0, "Value 2:");
 		tab_group_event.add(text);
 		value2InputText = new FlxUIInputTextEx(20, 150, 100, "");
 		blockPressWhileTypingOn.push(value2InputText);
-      value2InputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		
 		// New event buttons
 		var removeButton:FlxButton = new FlxButton(eventDropDown.x + eventDropDown.width + 10, eventDropDown.y, '-', function() {
@@ -2493,7 +2479,7 @@ class ChartEditorState extends MusicBeatState
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
-					if (FlxG.keys.pressed.UP)
+					if (controls.UI_UP_P)
 					{
 						var fuck:Float = MathUtil.quantize(beat, snap) - increase; // (Math.floor((beat+snap) / snap) * snap);
 						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
@@ -2616,7 +2602,7 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 			var shiftThing:Int = 1;
-			if (FlxG.keys.pressed.SHIFT  #if android || touchPad.buttonC.pressed #end) shiftThing = 4;
+			if (FlxG.keys.pressed.SHIFT #if android || touchPad.buttonC.pressed #end) shiftThing = 4;
 			
 			if (FlxG.keys.justPressed.D #if android || touchPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
 			if (FlxG.keys.justPressed.A #if android || touchPad.buttonLeft.justPressed #end)
@@ -2631,7 +2617,7 @@ class ChartEditorState extends MusicBeatState
 				}
 			}
 		}
-		else if (FlxG.keys.justPressed.ENTER)
+		else if (touchPad.buttonC.justPressed)
 		{
 			for (i in 0...blockPressWhileTypingOn.length)
 			{
@@ -2807,7 +2793,6 @@ class ChartEditorState extends MusicBeatState
 			}
 		}
 		lastConductorPos = Conductor.songPosition;
-		
 		super.update(elapsed);
 	}
 	
@@ -3893,7 +3878,7 @@ class ChartEditorState extends MusicBeatState
 		try
 		{
 			final songName = Paths.sanitize(song);
-			PlayState.SONG = Chart.fromPath(Paths.json('$songName/data/${Difficulty.getDifficultyFilePath()}'));
+			PlayState.SONG = Chart.fromPath(Paths.json('$songName/${Difficulty.getDifficultyFilePath()}'));
 		}
 		catch (e)
 		{
