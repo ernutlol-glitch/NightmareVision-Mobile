@@ -1059,11 +1059,6 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		}
 	}
 
-   #if android
-   var lastTouchX:Float = 0;
-   var lastTouchY:Float = 0;
-  #end
-	
 	function controlCamera(elapsed:Float)
    {
     if ((FlxG.keys.pressed.E #if android || touchPad.buttonV.pressed #end)  && FlxG.camera.zoom < 3)
@@ -1103,39 +1098,29 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
     }
 
     #end
-
+   //This part was not done by me.
     #if android
-var touches = FlxG.touches.list;
+     if (FlxG.mouse.justPressed)
+		{
+			isCameraDragging = false;
+		}
 
-if (!ToolKitUtils.isHaxeUIHovered(camHUD) && touches.length == 1)
-{
-    var touch = touches[0];
+		if (FlxG.mouse.pressed && isCameraDragging)
+		{
+			var mult = FlxG.keys.pressed.SHIFT ? 2 : 1;
+			FlxG.camera.scroll.x -= FlxG.mouse.deltaX * mult * 0.5;
+			FlxG.camera.scroll.y -= FlxG.mouse.deltaY * mult * 0.5;
+		}
+		else if (FlxG.mouse.justMoved && !isCameraDragging && (Math.abs(FlxG.mouse.deltaX) > 10 || Math.abs(FlxG.mouse.deltaY) > 10))
+		{
+			isCameraDragging = true;
+		}
 
-    if (touch.pressed)
-    {
-        var dx = touch.x - lastTouchX;
-        var dy = touch.y - lastTouchY;
+		if (FlxG.mouse.justReleased)
+		{
+			isCameraDragging = false;
+		}
 
-        if (!isCameraDragging && (Math.abs(dx) > 8 || Math.abs(dy) > 8))
-        {
-            isCameraDragging = true;
-        }
-
-        if (isCameraDragging)
-        {
-            var mult:Float = 0.5; 
-            FlxG.camera.scroll.x -= dx * mult;
-            FlxG.camera.scroll.y -= dy * mult;
-        }
-
-        lastTouchX = touch.x;
-        lastTouchY = touch.y;
-    }
-    else
-    {
-        isCameraDragging = false;
-    }
-}
 #end
 
     FlxG.camera.zoom = FlxMath.bound(FlxG.camera.zoom, 0.1, 6);
