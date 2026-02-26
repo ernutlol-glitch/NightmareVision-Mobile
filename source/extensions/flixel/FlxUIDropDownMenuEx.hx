@@ -95,19 +95,16 @@ class FlxUIDropDownMenuEx extends FlxUIDropDownMenu
         }
     }
 
-    override private function showList(b:Bool):Void
+        override private function showList(b:Bool):Void
     {
-        for (button in list) {
-            button.visible = b;
-            button.active = b;
-        }
+        super.showList(b);
 
-        dropPanel.visible = b;
-        if(currentScroll != 0) {
+        if(!b && currentScroll != 0) {
             currentScroll = 0;
             updateButtonPositions();
         }
-        
-        // FlxUI.forceFocus(b, this);
+
+        #if !android
+        FlxUI.forceFocus(b, this);
+        #end
     }
-}
