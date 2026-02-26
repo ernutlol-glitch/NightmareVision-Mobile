@@ -55,7 +55,6 @@ class FlxUIInputTextEx extends FlxUIInputText
 	#end
 
 	#if android
-	// Añadidos paréntesis () a justStarted
 	var touches = FlxG.touches.justStarted(); 
 	if (touches.length > 0) checkTouch = true;
 	#end
