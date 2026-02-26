@@ -43,7 +43,8 @@ class FlxUIInputTextEx extends FlxUIInputText
 		}
 	}
 	
-	override public function update(elapsed:Float):Void{
+	override public function update(elapsed:Float):Void
+{
 	super.update(elapsed);
 
 	var hadFocus:Bool = hasFocus;
@@ -54,15 +55,18 @@ class FlxUIInputTextEx extends FlxUIInputText
 	#end
 
 	#if android
-	if (FlxG.touches.justStarted.length > 0) checkTouch = true;
+	// Añadidos paréntesis () a justStarted
+	var touches = FlxG.touches.justStarted(); 
+	if (touches.length > 0) checkTouch = true;
 	#end
 
 	if (checkTouch)
 	{
-	  var isOver:Bool = false;
+		var isOver:Bool = false;
 		
 		#if android
-		if (FlxG.touches.justStarted.length > 0 && FlxG.touches.justStarted[0].overlaps(this, getDefaultCamera())) 
+		var touches = FlxG.touches.justStarted();
+		if (touches.length > 0 && touches[0].overlaps(this, getDefaultCamera())) 
 			isOver = true;
 		#end
 		
@@ -92,6 +96,7 @@ class FlxUIInputTextEx extends FlxUIInputText
 		}
 	}
 }
+
 	
 	override function onKeyDown(e:KeyboardEvent):Void
 	{
