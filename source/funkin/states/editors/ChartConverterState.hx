@@ -197,7 +197,7 @@ function accept()
         }
         catch (e)
         {
-            this.showError(e);
+            showError(e);
         }
     }
     else
@@ -289,6 +289,11 @@ function accept()
     }
     #end
 }
+
+ inline function showError(exception:Exception)
+	{
+		Logger.log('Failed to convert chart\nException: $exception', ERROR, true);
+	}
 	
 	function saveFromFormat(path:String, format:OneOfArray<DynamicFormat>, ?diff:FormatDifficulty)
 	{
