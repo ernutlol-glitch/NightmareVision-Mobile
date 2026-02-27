@@ -197,7 +197,7 @@ function accept()
         }
         catch (e)
         {
-            showError(e);
+            this.showError(e);
         }
     }
     else
