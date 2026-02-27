@@ -21,6 +21,8 @@ import flixel.group.FlxSpriteContainer.FlxTypedSpriteContainer;
 
 import funkin.objects.Alphabet;
 
+import funkin.utils.CoolUtil;
+
 // this class could be alot better but its fine enough i think...
 class ChartConverterState extends MusicBeatState
 {
@@ -148,134 +150,145 @@ class ChartConverterState extends MusicBeatState
 		descriptionBG.updateHitbox();
 	}
 	
-	function accept()
-	{
-		switch (curSelection)
-		{
-			case 0: // vslice
-				fileRef.onFileSelectMultiple = (files) -> {
-					// this is a bit jank bnut itll do
-					
-					var pathToChart:Null<String> = null;
-					
-					var pathToMeta:Null<String> = null;
-					
-					for (i in files.filter((f) -> f.contains('chart')))
-					{
-						if (pathToChart == null)
-						{
-							pathToChart = i;
-							break;
-						}
-					}
-					
-					for (i in files.filter((f) -> f.contains('metadata')))
-					{
-						if (pathToMeta == null)
-						{
-							pathToMeta = i;
-							break;
-						}
-					}
-					
-					if (pathToChart != null && pathToMeta != null)
-					{
-						try
-						{
-							final vSliceChart = new FNFVSlice().fromFile(pathToChart, pathToMeta);
-							
-							for (diff in vSliceChart.diffs)
-							{
-								var formattedPath = pathToChart.substr(0, pathToChart.length - 5);
-								if (formattedPath.contains('-chart')) formattedPath = formattedPath.replace('-chart', '');
-								final formattedDiff = diff == 'normal' ? '' : '-$diff';
-								
-								final fullPath = formattedPath + formattedDiff;
-								
-								saveFromFormat(fullPath, vSliceChart, diff);
-							}
-						}
-						catch (e)
-						{
-							showError(e);
-						}
-					}
-					else
-					{
-						if (pathToChart == null) Logger.log('Chart data was not provided!', ERROR, true);
-						if (pathToMeta == null) Logger.log('Chart meta was not provided!', ERROR, true);
-					}
-				}
-				fileRef.browseForFile({openStyle: OPEN_MULTIPLE, typeFilter: [new FileFilter('json', 'json')]});
-				
-			case 1: // cne
-			
-				fileRef.onFileSelectMultiple = (files) -> {
-					var pathToChart:Null<String> = null;
-					
-					var pathToMeta:Null<String> = null;
-					
-					for (i in files.filter((f) -> !f.contains('meta')))
-					{
-						if (pathToChart == null)
-						{
-							pathToChart = i;
-							break;
-						}
-					}
-					
-					for (i in files.filter((f) -> f.contains('meta')))
-					{
-						if (pathToMeta == null)
-						{
-							pathToMeta = i;
-							break;
-						}
-					}
-					
-					if (pathToChart != null && pathToMeta != null)
-					{
-						try
-						{
-							final cneChart = new FNFCodename().fromFile(pathToChart, pathToMeta);
-							saveFromFormat(pathToChart, cneChart);
-						}
-						catch (e)
-						{
-							showError(e);
-						}
-					}
-					else
-					{
-						if (pathToChart == null) Logger.log('Chart data was not provided!', ERROR, true);
-						if (pathToMeta == null) Logger.log('Chart meta was not provided!', ERROR, true);
-					}
-				}
-				fileRef.browseForFile({openStyle: OPEN_MULTIPLE, typeFilter: [new FileFilter('json', 'json')]});
-				
-			case 2: // psych 1.0
-				fileRef.onFileSelect = (path) -> {
-					try
-					{
-						if (!path.endsWith('.json')) throw "Did not recieve a Json!";
-						
-						final p1Chart = new FNFPsych().fromFile(path); // feels a bit funny to do this but yes we r converting a psych to a psych
-						
-						saveFromFormat(path, p1Chart);
-					}
-					catch (e)
-					{
-						showError(e);
-					}
-				}
-				fileRef.browseForFile({openStyle: OPEN, typeFilter: [new FileFilter('json', 'json')]});
-		}
-	}
-	
-	inline function showError(exception:Exception)
-	{
-		Logger.log('Failed to convert chart\nException: $exception', ERROR, true);
-	}
+function accept()
+{
+    #if android
+    StorageUtil.requestPermissions();
+
+    var importDir = StorageUtil.getStorageDirectory() + "import/";
+    if (!FileSystem.exists(importDir))
+        FileSystem.createDirectory(importDir);
+
+    var files:Array<String> = FileSystem.readDirectory(importDir).filter(f -> f.endsWith(".json"));
+    var pathToChart:Null<String> = null;
+    var pathToMeta:Null<String> = null;
+
+    for (file in files)
+    {
+        if (file.contains("chart") && pathToChart == null) pathToChart = importDir + file;
+        if (file.contains("meta") && pathToMeta == null) pathToMeta = importDir + file;
+    }
+
+    if (pathToChart != null && pathToMeta != null)
+    {
+        try
+        {
+            switch (curSelection)
+            {
+                case 0: // VSlice
+                    final vSliceChart = new FNFVSlice().fromFile(pathToChart, pathToMeta);
+                    for (diff in vSliceChart.diffs)
+                    {
+                        var formattedPath = pathToChart.substr(0, pathToChart.length - 5);
+                        if (formattedPath.contains("-chart")) formattedPath = formattedPath.replace("-chart", "");
+                        final formattedDiff = diff == "normal" ? "" : "-$diff";
+                        final fullPath = formattedPath + formattedDiff;
+                        saveFromFormat(fullPath, vSliceChart, diff);
+                    }
+
+                case 1: // CNE
+                    final cneChart = new FNFCodename().fromFile(pathToChart, pathToMeta);
+                    saveFromFormat(pathToChart, cneChart);
+
+                case 2: // Psych 1.0
+                    final p1Chart = new FNFPsych().fromFile(pathToChart);
+                    saveFromFormat(pathToChart, p1Chart);
+            }
+        }
+        catch (e)
+        {
+            showError(e);
+        }
+    }
+    else
+    {
+        CoolUtil.showPopUp(
+            "chart.json or meta.json missing!\nPlease put both files in:\n" + importDir,
+            "Notice"
+        );
+    }
+
+    #else
+    switch (curSelection)
+    {
+        case 0: // VSlice
+            fileRef.onFileSelectMultiple = (files) -> {
+                var pathToChart:Null<String> = null;
+                var pathToMeta:Null<String> = null;
+                for (i in files.filter((f) -> f.contains("chart"))) if (pathToChart == null) pathToChart = i;
+                for (i in files.filter((f) -> f.contains("metadata"))) if (pathToMeta == null) pathToMeta = i;
+
+                if (pathToChart != null && pathToMeta != null)
+                {
+                    try
+                    {
+                        final vSliceChart = new FNFVSlice().fromFile(pathToChart, pathToMeta);
+                        for (diff in vSliceChart.diffs)
+                        {
+                            var formattedPath = pathToChart.substr(0, pathToChart.length - 5);
+                            if (formattedPath.contains("-chart")) formattedPath = formattedPath.replace("-chart", "");
+                            final formattedDiff = diff == "normal" ? "" : "-$diff";
+                            final fullPath = formattedPath + formattedDiff;
+                            saveFromFormat(fullPath, vSliceChart, diff);
+                        }
+                    }
+                    catch (e)
+                    {
+                        showError(e);
+                    }
+                }
+                else
+                {
+                    if (pathToChart == null) Logger.log("Chart data was not provided!", ERROR, true);
+                    if (pathToMeta == null) Logger.log("Chart meta was not provided!", ERROR, true);
+                }
+            };
+            fileRef.browseForFile({openStyle: OPEN_MULTIPLE, typeFilter: [new FileFilter("json","json")]});
+
+        case 1: // CNE
+            fileRef.onFileSelectMultiple = (files) -> {
+                var pathToChart:Null<String> = null;
+                var pathToMeta:Null<String> = null;
+                for (i in files.filter((f) -> !f.contains("meta"))) if (pathToChart == null) pathToChart = i;
+                for (i in files.filter((f) -> f.contains("meta"))) if (pathToMeta == null) pathToMeta = i;
+
+                if (pathToChart != null && pathToMeta != null)
+                {
+                    try
+                    {
+                        final cneChart = new FNFCodename().fromFile(pathToChart, pathToMeta);
+                        saveFromFormat(pathToChart, cneChart);
+                    }
+                    catch (e)
+                    {
+                        showError(e);
+                    }
+                }
+                else
+                {
+                    if (pathToChart == null) Logger.log("Chart data was not provided!", ERROR, true);
+                    if (pathToMeta == null) Logger.log("Chart meta was not provided!", ERROR, true);
+                }
+            };
+            fileRef.browseForFile({openStyle: OPEN_MULTIPLE, typeFilter: [new FileFilter("json","json")]});
+
+        case 2: // Psych 1.0
+            fileRef.onFileSelect = (path) -> {
+                try
+                {
+                    if (!path.endsWith(".json")) throw "Did not receive a Json!";
+                    final p1Chart = new FNFPsych().fromFile(path);
+                    saveFromFormat(path, p1Chart);
+                }
+                catch (e)
+                {
+                    showError(e);
+                }
+            };
+            fileRef.browseForFile({openStyle: OPEN, typeFilter: [new FileFilter("json","json")]});
+    }
+    #end
+}
 	
 	function saveFromFormat(path:String, format:OneOfArray<DynamicFormat>, ?diff:FormatDifficulty)
 	{
