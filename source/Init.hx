@@ -1,10 +1,13 @@
 package;
 
+import funkin.states.editors.WIPNoteSkinEditor;
 import funkin.FunkinAssets;
 
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
+
+import funkin.backend.math.Vector3;
 
 /**
  * Initiation state that prepares backend classes and returns to menus when finished
@@ -23,15 +26,11 @@ class Init extends FlxState
 		
 		funkin.data.Highscore.load();
 		
-		MobileData.init();
-		
 		if (FlxG.save.data.weekCompleted != null) funkin.states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		
 		FlxSprite.defaultAntialiasing = ClientPrefs.globalAntialiasing;
 		
-		#if DISCORD_ALLOWED
 		DiscordClient.init();
-		#end
 		
 		#if MODS_ALLOWED
 		funkin.Mods.pushGlobalMods();
@@ -83,6 +82,7 @@ class Init extends FlxState
 		super.create();
 		
 		final nextState:Class<FlxState> = Main.startMeta.skipSplash || !ClientPrefs.toggleSplashScreen ? Main.startMeta.initialState : Splash;
+		// final nextState:Class<FlxState> = WIPNoteSkinEditor;
 		FlxG.switchState(() -> Type.createInstance(nextState, []));
 	}
 }
